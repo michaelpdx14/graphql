@@ -2,46 +2,15 @@ import { buildSchema } from 'graphql';
 import { Post, PostInput } from './../models/Post';
 import { Comment, CommentInput } from './../models/Comment';
 import { QUERY_LIMIT } from './../../scripts/contants'
+const fs = require("fs");
+const path = require("path");
 
-export const schema = buildSchema(`
-  type Post {
-    id: String,
-    title: String,
-    body: String,
-    comments: [Comment!]!,
-  }
+const schemaFile = fs.readFileSync(
+  path.join('','', "schema/schema.gql"),
+  "utf8"
+);
 
-  type Comment {
-    id: String,
-    name: String,
-    email: String,
-    body: String,
-    post: Post,
-  }
-
-  input PostInput {
-    title: String,
-    body: String,
-    comment: CommentInput,
-  }
-
-  input CommentInput {
-    name: String,
-    email: String,
-    body: String,
-    post: PostInput,
-  }
-
-  type Query {
-    getPosts(offset: Int): [Post!]!
-    getComments(offset: Int): [Comment!]!
-  }
-
-  type Mutation {
-    createPost(input: PostInput): Post
-    createComment(input: CommentInput): Comment
-  }
-`);
+export const schema = buildSchema(schemaFile);
 
 export const root = {
 
